@@ -149,3 +149,45 @@ import faviconPng from '@/assets/favicon.png' // 开始在tsx文件中愉快的�
   }
 }
 ```
+
+##### 3. rem 适配布局 webpack 相关配置
+
+- 参考链接
+  [https://www.cnblogs.com/beyonds/p/12988329.html](https://www.cnblogs.com/beyonds/p/12988329.html)
+  [https://www.cnblogs.com/zhangnan35/p/12682925.html](https://www.cnblogs.com/zhangnan35/p/12682925.html)
+
+`yarn add postcss-pxtorem react-app-rewire-postcss -D`
+在`config-overrides.js`中对`postcss`进行重写
+
+```js
+// config-overrides.js
+
+// ... 其他模块
+const rewirePostcss = require('react-app-rewire-postcss')
+
+module.exports = {
+  // ... 其他配置
+  webpack: override(
+    // ... 其他配置
+    (config) => {
+      rewirePostcss(config, {
+        plugins: () => [
+          // ... 其他插件配置，直接从源码中复制即可
+          require('postcss-pxtorem')({
+            rootValue: 100,
+            propWhiteList: ['*'], // 不知道是啥，但是都写上了
+            selectorBlackList: [/ignore/], // 设置忽略转换的类名，可以传入字符串或正则，字符串最终也会生成正则
+            minPixelValue: 3, // 小于该值的不会被转换（等于的也会被转换）
+            mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false
+            replace: true, // 是否转换后直接更换属性值
+            exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配
+            landscape: false, // 是否处理横屏情况
+          }),
+        ],
+      })
+
+      return config
+    }
+  ),
+}
+```
