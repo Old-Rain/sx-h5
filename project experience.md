@@ -127,6 +127,10 @@ module.exports = {
 }
 ```
 
+```typescript
+import faviconPng from '@/assets/favicon.png' // 开始在tsx文件中愉快的使用路径别名
+```
+
 ##### 2. 关闭自动打开默认浏览器，修改端口号等（终极解决方案）
 
 - 参考链接
