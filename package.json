@@ -18,6 +18,8 @@
   "devDependencies": {
     "customize-cra": "^1.0.0",
     "node-sass": "^4.14.1",
+    "postcss-pxtorem": "^5.1.1",
+    "react-app-rewire-postcss": "^3.0.2",
     "react-app-rewired": "^2.1.6"
   },
   "scripts": {
