@@ -135,8 +135,13 @@ module.exports = {
 修改 `package.json` 中的命令
 
 ```json
-"scripts": {
-  "start:0": "set BROWSER=Chrome&&set PORT=3001&&react-scripts start",
-  "start:1": "set BROWSER=none&&set PORT=3001&&react-app-rewired start",
+// package.json
+
+{
+  // ... 其他属性
+  "scripts": {
+    "start:0": "set BROWSER=Chrome&&set PORT=3001&&react-scripts start",
+    "start:1": "set BROWSER=none&&set PORT=3001&&react-app-rewired start"
+  }
 }
 ```
