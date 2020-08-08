@@ -191,3 +191,10 @@ module.exports = {
   ),
 }
 ```
+
+##### 4. antd-mobile 组件库按需引入
+
+直接查阅官网即可
+
+- 参考链接
+  [https://mobile.ant.design/docs/react/use-with-create-react-app-cn](https://mobile.ant.design/docs/react/use-with-create-react-app-cn)
