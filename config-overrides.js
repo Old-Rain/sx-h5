@@ -1,15 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 
-const {
-  override,
-  fixBabelImports,
-  addWebpackExternals,
-  addWebpackAlias,
-  addLessLoader,
-  overrideDevServer,
-  watchAll,
-} = require('customize-cra')
+const { override, fixBabelImports, addWebpackExternals, addWebpackAlias, addLessLoader, overrideDevServer, watchAll } = require('customize-cra')
 const rewirePostcss = require('react-app-rewire-postcss')
 const postcssNormalize = require('postcss-normalize')
 
@@ -39,16 +31,20 @@ module.exports = {
         echarts: 'window.echarts',
         // highcharts:"window.highcharts"
       }), */
-    addWebpackAlias({
-      //路径别名
-      '@': path.resolve(__dirname, 'src'),
-    }),
     /* addLessLoader({
         javascriptEnabled: true,
         modifyVars: {
           '@primary-color': '#1DA57A',
         },
       }), */
+    addWebpackAlias({
+      //路径别名
+      '@': path.resolve(__dirname, 'src'),
+    }),
+    fixBabelImports('import', {
+      libraryName: 'antd-mobile',
+      style: 'css',
+    }),
     (config) => {
       /* //暴露webpack的配置 config ,evn
         // 去掉打包生产map 文件

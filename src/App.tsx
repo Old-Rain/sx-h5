@@ -1,4 +1,6 @@
 import React from 'react'
+
+import { Button } from 'antd-mobile'
 import logo from './logo.svg'
 import styles from './App.module.scss'
 
@@ -24,12 +26,14 @@ function App() {
         </a>
         <img src={faviconPng} alt="" />
         <QQ />
+        
         <div className={styles.big}>
           <div className={[styles.font].join(' ')}>大</div>
           <div className={[styles.font, styles.ignoreeee].join(' ')}>ignore</div>
         </div>
         <div className={styles.line}></div>
       </header>
+      <Button type="warning" disabled>warning disabled</Button>
     </div>
   )
 }
