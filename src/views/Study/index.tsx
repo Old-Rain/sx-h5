@@ -1,77 +1,50 @@
-import React, { RefObject } from 'react'
+import React from 'react'
 
-import { Button } from 'antd-mobile'
-import styles from './index.module.scss'
-
-import { chuizi } from '@/utils/dateFormat'
-
-interface FancyButtonProps {
-  children: string
-  onClick: (e?: any) => void
-}
-
-const FancyButton = React.forwardRef<HTMLButtonElement, FancyButtonProps>((props, ref) => (
-  <button ref={ref} className="FancyButton" onClick={props.onClick}>
-    {props.children}
-  </button>
-))
-
-interface FancyInputProps {
+interface InputProps {
   children: () => JSX.Element
 }
 
-const FancyInput = React.forwardRef<HTMLInputElement, FancyInputProps>((props, ref) => {
+interface InputCurrent {
+  getVal: () => string
+}
+
+const Input: React.ForwardRefRenderFunction<InputCurrent, InputProps> = (props, ref) => {
+  const [val, setVal] = React.useState('只要998')
   const inputRef = React.useRef<HTMLInputElement>(null)
 
-  const qq = 5
+  const getVal = () => val
 
-  React.useImperativeHandle<HTMLInputElement, any>(ref, () => ({
-    focus() {
-      inputRef.current?.focus()
-    },
-    log5() {
-      console.log(qq)
-    },
-  }))
+  React.useImperativeHandle(ref, () => ({ getVal }))
+
   return (
     <div>
-      <input ref={inputRef} />
+      <input
+        ref={inputRef}
+        type="text"
+        value={val}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setVal(e.target.value)
+        }}
+      />
       {props.children()}
     </div>
   )
-})
+}
 
-function Study() {
-  chuizi()
+const ExoticInput = React.forwardRef(Input)
 
-  const refButton = React.useRef<HTMLButtonElement>(null)
-  const refFancyInput = React.useRef<HTMLInputElement>(null)
+const Study = () => {
+  const [val, setVal] = React.useState('')
+  const exoticInputRef = React.useRef<InputCurrent>(null)
 
-  const refInputFocus = (refFancyInput: RefObject<HTMLInputElement>) => {
-    ;(refFancyInput.current as any).log5()
-    refFancyInput.current?.focus()
+  function handleExoticInput(exoticInputRef: React.RefObject<InputCurrent>) {
+    setVal(exoticInputRef.current?.getVal()!)
   }
 
   return (
-    <div className={styles.Study}>
-      <FancyButton ref={refButton} onClick={() => console.log(refButton)}>
-        Click me!
-      </FancyButton>
-      <FancyInput ref={refFancyInput}>
-        {() => {
-          return <button onClick={() => refInputFocus(refFancyInput)}>点我</button>
-        }}
-      </FancyInput>
-      <Button
-        type="warning"
-        disabled={false}
-        onClick={(e) => {
-          console.log(e)
-          alert(1)
-        }}
-      >
-        warning disabled
-      </Button>
+    <div>
+      <div>{val}</div>
+      <ExoticInput ref={exoticInputRef}>{() => <button onClick={() => handleExoticInput(exoticInputRef)}>点我</button>}</ExoticInput>
     </div>
   )
 }
