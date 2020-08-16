@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Home from '@/views/Home'
 
 const Hdgl = React.lazy(() => import('@/views/Hdgl'))
-const S_UseImperativeHandle = React.lazy(() => import('@/views/Study/S_UseImperativeHandle'))
+const Study = React.lazy(() => import('@/views/Study'))
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/" exact render={() => <Redirect to="/home" />} />
         <Route path="/home" component={Home} />
         <Route path="/hdgl" component={Hdgl} />
-        <Route path="/study" component={S_UseImperativeHandle} />
+        <Route path="/study" component={Study} />
       </Router>
     </React.Suspense>
   )
