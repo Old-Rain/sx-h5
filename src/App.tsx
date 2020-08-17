@@ -11,7 +11,7 @@ function App() {
       <Router>
         <Route path="/" exact render={() => <Redirect to="/home" />} />
         <Route path="/home" component={Home} />
-        <Route path="/hdgl" component={Hdgl} />
+        <Route path="/hdgl" component={Hdgl} />git
       </Router>
     </React.Suspense>
   )
