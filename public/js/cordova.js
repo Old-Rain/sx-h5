@@ -12,7 +12,7 @@
     },
   }
 
-  window.cordova = {
+  const cordova = {
     exec(success, error, plugin, fnName, params) {
       function p() {
         return new Promise((resolve, reject) => {
@@ -33,4 +33,8 @@
         })
     },
   }
+
+  setTimeout(() => {
+    window.cordova = cordova
+  }, 100)
 })()

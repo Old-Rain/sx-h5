@@ -5,7 +5,6 @@ const Home: React.FC = () => {
   return (
     <div>
       <Link to="/hdgl">Hdgl</Link>
-      <Link to="/study">Study</Link>
     </div>
   )
 }

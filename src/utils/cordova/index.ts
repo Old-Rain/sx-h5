@@ -15,7 +15,7 @@ export function auth() {
 
 // 心跳保活
 export function keep() {
-  window.cordova.exec(
+  cordova.exec(
     (res) => {
       console.log(JSON.parse(res))
     },
