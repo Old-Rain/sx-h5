@@ -1,12 +1,21 @@
 ;(function () {
   const pluginList = {
+    // 用户信息
     userInfo: {
       auth: {
         success: '{"code":"q52hsdc852jhqwhe2f"}',
         error: -1,
       },
       keep: {
-        success: '',
+        success: '1',
+        error: -1,
+      },
+    },
+
+    // 界面相关
+    layout: {
+      scroll: {
+        success: '1',
         error: -1,
       },
     },
@@ -36,5 +45,5 @@
 
   setTimeout(() => {
     window.cordova = cordova
-  }, 100)
+  }, 200)
 })()

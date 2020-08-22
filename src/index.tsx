@@ -1,12 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-// import { keep } from '@/utils/cordova'
+import { appLogin } from './utils/appAuth'
+
 import '@/styles/index.scss'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-// keep()
+appLogin()
 
 ReactDOM.render(
   <React.StrictMode>
