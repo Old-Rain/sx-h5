@@ -17,9 +17,15 @@ export function appLogin() {
     return
   }
 
-  // 10秒加载不出来放弃
+  // 10秒加载不出来鉴权失败
   if (appLoginCount >= 100) {
     console.log('cordova加载失败')
+
+    store.dispatch({
+      type: USER.UPDATE_AUTH_STATUS,
+      value: '-1',
+    })
+
     return
   }
 
