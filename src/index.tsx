@@ -1,13 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { appLogin } from './utils/appAuth'
-
 import '@/styles/index.scss'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-
-appLogin()
 
 ReactDOM.render(
   <React.StrictMode>

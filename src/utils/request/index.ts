@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const request = axios.create({
-  timeout: 60000,
+const API = axios.create({
+  timeout: 20000,
 })
 
 // 请求拦截
-request.interceptors.request.use(
+API.interceptors.request.use(
   (value) => {
     return value
   },
@@ -15,13 +15,13 @@ request.interceptors.request.use(
 )
 
 // 响应拦截
-request.interceptors.response.use(
+API.interceptors.response.use(
   (value) => {
-    return value.data
+    return value
   },
   (error) => {
     return
   },
 )
 
-export default request
+export default API.request
