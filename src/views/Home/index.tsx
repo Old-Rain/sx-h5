@@ -1,26 +1,39 @@
+// react
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+
+// component
+import { Toast } from 'antd-mobile'
+import LoseStatus from '@/components/LoseStatus'
+
+// store
 import store from '@/store'
 import { appLogin } from '@/utils/appAuth'
-appLogin()
+
+setTimeout(appLogin, 300)
 
 const Home: React.FC = () => {
   const [authStatus, setAuthStatus] = useState(store.getState().userModule.authStatus)
 
   useEffect(() => {
     console.log('鉴权执行')
+
+    if (!authStatus) {
+      Toast.loading('加载中...', 0)
+    } else {
+      Toast.hide()
+    }
+
     store.subscribe(() => {
       setAuthStatus(store.getState().userModule.authStatus)
     })
-  }, [])
+  }, [authStatus])
 
   return (
     <>
-      {authStatus === '0' ? (
-        <div>鉴权中...</div>
-      ) : authStatus === '-1' ? (
-        <div>鉴权失败 T_T~</div>
-      ) : authStatus === '1' ? (
+      {authStatus === -1 ? (
+        <LoseStatus type="fail" tip="系统在开小差，请返回重试~" />
+      ) : authStatus === 1 ? (
         <div>
           <Link to="/hdgl">Hdgl</Link>
         </div>

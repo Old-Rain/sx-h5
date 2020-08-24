@@ -17,7 +17,7 @@ export interface UserState {
 }
 
 const userState: UserState = {
-  authStatus: '0',
+  authStatus: 0,
   userInfo: {},
 }
 

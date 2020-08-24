@@ -24,7 +24,7 @@ import { UserInfo } from '@/store/modules/user/types'
 function authFail() {
   store.dispatch({
     type: USER.UPDATE_AUTH_STATUS,
-    value: '-1',
+    value: -1,
   })
 }
 
@@ -32,7 +32,7 @@ function authFail() {
 function authPass(value: UserInfo) {
   store.dispatch({
     type: USER.UPDATE_AUTH_STATUS,
-    value: '1',
+    value: 1,
   })
   store.dispatch({
     type: USER.UPDATE_USER_INFO,
