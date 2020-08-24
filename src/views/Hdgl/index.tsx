@@ -1,7 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { FC, PropsWithChildren } from 'react'
 
-const Hdgl: React.FC = (props) => {
-  return <div>活动管理</div>
+import Nav from '@/components/Nav'
+
+import { backContainer } from '@/utils/cordova'
+
+interface HdglProps {}
+
+const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
+  return (
+    <>
+      <Nav title="活动指标概览" back={backContainer} />
+      <div>活动管理</div>
+    </>
+  )
 }
 
 export default Hdgl

@@ -46,3 +46,19 @@ export function iOSScroll() {
     [],
   )
 }
+
+// 返回到容器
+export function backContainer() {
+  cordova.exec(
+    () => {
+      console.log('返回到容器成功')
+      window.location.replace(window.location.origin)
+    },
+    () => {
+      console.log('返回到容器失败')
+    },
+    'layout',
+    'scroll',
+    [],
+  )
+}
