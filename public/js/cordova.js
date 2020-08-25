@@ -52,5 +52,5 @@
 
   setTimeout(() => {
     window.cordova = cordova
-  }, 1000)
+  }, 500)
 })()

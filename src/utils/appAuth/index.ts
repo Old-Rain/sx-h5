@@ -22,15 +22,23 @@ import { UserInfo } from '@/store/modules/user/types'
 
 // 鉴权失败
 function authFail() {
-  store.dispatch({
-    type: USER.UPDATE_AUTH_STATUS,
-    value: -1,
-  })
+  let timer: NodeJS.Timeout | null = setTimeout(() => {
+    clearTimeout(Number(timer))
+    timer = null
+
+    store.dispatch({
+      type: USER.UPDATE_AUTH_STATUS,
+      value: -1,
+    })
+  }, 2000)
 }
 
 // 鉴权成功
 function authPass(value: UserInfo) {
-  setTimeout(() => {
+  let timer: NodeJS.Timeout | null = setTimeout(() => {
+    clearTimeout(Number(timer))
+    timer = null
+
     store.dispatch({
       type: USER.UPDATE_AUTH_STATUS,
       value: 1,
@@ -39,18 +47,13 @@ function authPass(value: UserInfo) {
       type: USER.UPDATE_USER_INFO,
       value,
     })
-  }, 3000)
+  }, 2000)
 }
 
 // 异步加载cordova计数器
 let appLoginCount = 0
-let appLoginTimer: NodeJS.Timeout | null = null
+export let appLoginTimer: NodeJS.Timeout | null = null
 export function appLogin() {
-  store.dispatch({
-    type: USER.UPDATE_USER_INFO,
-    value: 0,
-  })
-
   // 轮询cordova
   if (!window.cordova || !window.cordova.exec) {
     appLoginCount++

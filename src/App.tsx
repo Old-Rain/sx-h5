@@ -10,7 +10,10 @@ import withAuth from '@/withComponents/withAuth'
 import Home from '@/views/Home'
 import NotFound from '@/views/NotFound'
 
-const Hdgl = withAuth(React.lazy(() => import('@/views/Hdgl')))
+const Hdgl = withAuth(
+  React.lazy(() => import('@/views/Hdgl')),
+  '活动指标概览',
+)
 
 function App() {
   return (

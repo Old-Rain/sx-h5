@@ -1,47 +1,70 @@
 // react
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { ComponentClass, LazyExoticComponent, FC, PropsWithChildren } from 'react'
-import { RouteChildrenProps } from 'react-router-dom'
+import { Unsubscribe } from 'redux'
 
 // component
-import { Toast } from 'antd-mobile'
-import LoseStatus from '@/components/LoseStatus'
-import LoadingFail from '@/views/LoadingFail'
+import LoadFail from '@/views/LoadFail'
+import Loading from '@/views/Loading'
 
 // store
 import store from '@/store'
 import { appLogin } from '@/utils/appAuth'
+import { USER } from '@/store/modules/user/actionTypes'
 
-interface withAuthProps /* extends RouteChildrenProps */ {}
+interface withAuthProps {}
 
-const withAuth = (Component: ComponentClass<any> | FC<any> | LazyExoticComponent<any>): FC<withAuthProps> => {
+const withAuth = (
+  Component: ComponentClass<any> | FC<any> | LazyExoticComponent<any>,
+  pageName: string,
+): FC<withAuthProps> => {
   const Auth: FC<withAuthProps> = (props: PropsWithChildren<withAuthProps>) => {
     const [authStatus, setAuthStatus] = useState(store.getState().userModule.authStatus)
+    const unsubscribe = useRef<Unsubscribe>(() => {})
 
     useEffect(() => {
-      console.log('鉴权')
-      if (authStatus !== 1) {
+      // 监听authStatus
+      unsubscribe.current = store.subscribe(() => {
+        setAuthStatus(store.getState().userModule.authStatus)
+      })
+
+      return () => {
+        // 卸载订阅者的监听
+        unsubscribe.current()
+
+        // 如果鉴权失败，离开页面将状态改为未鉴权状态，下次进来继续执行鉴权操作
+        if (authStatus !== 1) {
+          store.dispatch({
+            type: USER.UPDATE_AUTH_STATUS,
+            value: 0,
+          })
+        }
+      }
+    }, [authStatus])
+
+    // 是否需要鉴权
+    useEffect(() => {
+      if (store.getState().userModule.authStatus !== 1) {
         appLogin()
       }
     }, [])
 
-    useEffect(() => {
-      console.log('authStatus', authStatus)
-
-      if (!authStatus) {
-        Toast.loading('加载中...', 0)
-      } else if (authStatus) {
-        Toast.hide()
-      }
-
-      store.subscribe(() => {
-        console.log('监听', store.getState().userModule.authStatus)
-
-        setAuthStatus(store.getState().userModule.authStatus)
-      })
-    }, [authStatus])
-
-    return <>{authStatus === -1 ? <LoadingFail /> : authStatus === 1 ? <Component {...props} /> : ''}</>
+    return (
+      <>
+        {!authStatus ? (
+          // 鉴权中
+          <Loading pageName={pageName} />
+        ) : authStatus === -1 ? (
+          // 鉴权失败
+          <LoadFail pageName={pageName} />
+        ) : authStatus === 1 ? (
+          // 鉴权成功
+          <Component {...props} />
+        ) : (
+          ''
+        )}
+      </>
+    )
   }
   return Auth
 }
