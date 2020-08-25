@@ -29,7 +29,10 @@
     exec(success, error, plugin, fnName, params) {
       function p() {
         return new Promise((resolve, reject) => {
-          if (Math.random() > 0.9) {
+          let isLuck = Math.random()
+          console.log(isLuck)
+
+          if (isLuck > 0.8) {
             resolve()
           } else {
             reject()
@@ -49,5 +52,5 @@
 
   setTimeout(() => {
     window.cordova = cordova
-  }, 200)
+  }, 1000)
 })()

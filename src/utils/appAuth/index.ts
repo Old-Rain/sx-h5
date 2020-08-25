@@ -30,24 +30,33 @@ function authFail() {
 
 // 鉴权成功
 function authPass(value: UserInfo) {
-  store.dispatch({
-    type: USER.UPDATE_AUTH_STATUS,
-    value: 1,
-  })
-  store.dispatch({
-    type: USER.UPDATE_USER_INFO,
-    value,
-  })
+  setTimeout(() => {
+    store.dispatch({
+      type: USER.UPDATE_AUTH_STATUS,
+      value: 1,
+    })
+    store.dispatch({
+      type: USER.UPDATE_USER_INFO,
+      value,
+    })
+  }, 3000)
 }
 
 // 异步加载cordova计数器
 let appLoginCount = 0
+let appLoginTimer: NodeJS.Timeout | null = null
 export function appLogin() {
+  store.dispatch({
+    type: USER.UPDATE_USER_INFO,
+    value: 0,
+  })
+
   // 轮询cordova
   if (!window.cordova || !window.cordova.exec) {
     appLoginCount++
 
-    setTimeout(() => {
+    appLoginTimer = setTimeout(() => {
+      clearTimeout(Number(appLoginTimer))
       console.log(`尝试加载cordova_${appLoginCount}次`)
       appLogin()
     }, 100)
@@ -56,15 +65,17 @@ export function appLogin() {
   }
 
   // 10秒加载不出来鉴权失败
-  if (appLoginCount >= 100) {
+  if (appLoginCount >= 200) {
     console.log('cordova加载失败')
 
+    appLoginTimer = null
     authFail()
 
     return
   }
 
   console.log('cordova加载成功')
+  appLoginTimer = null
 
   // 开启iOS滚动视图
   iOSScroll()
@@ -94,7 +105,7 @@ function advanceCode() {
       advanceCodeCount++
       console.log(`获取code失败__${advanceCodeCount}次`)
 
-      if (advanceCodeCount >= 10) {
+      if (advanceCodeCount >= 1) {
         console.log(`放弃获取code`)
 
         authFail()

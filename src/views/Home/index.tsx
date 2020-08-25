@@ -1,45 +1,16 @@
 // react
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 
 // component
-import { Toast } from 'antd-mobile'
-import LoseStatus from '@/components/LoseStatus'
-
-// store
-import store from '@/store'
-import { appLogin } from '@/utils/appAuth'
-
-setTimeout(appLogin, 300)
+import { Icon } from 'antd-mobile'
+import Nav from '@/components/Nav'
+import Entry from './components/Entry'
 
 const Home: React.FC = () => {
-  const [authStatus, setAuthStatus] = useState(store.getState().userModule.authStatus)
-
-  useEffect(() => {
-    console.log('鉴权执行')
-
-    if (!authStatus) {
-      Toast.loading('加载中...', 0)
-    } else {
-      Toast.hide()
-    }
-
-    store.subscribe(() => {
-      setAuthStatus(store.getState().userModule.authStatus)
-    })
-  }, [authStatus])
-
   return (
     <>
-      {authStatus === -1 ? (
-        <LoseStatus type="fail" tip="系统在开小差，请返回重试~" />
-      ) : authStatus === 1 ? (
-        <div>
-          <Link to="/hdgl">Hdgl</Link>
-        </div>
-      ) : (
-        ''
-      )}
+      <Nav title="工作台" right={[<Icon key="0" type="search" />]} />
+      <Entry />
     </>
   )
 }

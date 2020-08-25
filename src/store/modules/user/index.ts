@@ -24,6 +24,7 @@ const userState: UserState = {
 const userModule: Reducer<UserState, CommonAction> = (state = userState, action) => {
   const { type, value } = action
   const newState = { ...state }
+  console.log(type, value)
 
   switch (type) {
     // 更新鉴权状态

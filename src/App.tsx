@@ -4,12 +4,13 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 
 // component
 import PageTransition from '@/components/PageTransition'
+import withAuth from '@/withComponents/withAuth'
 
 // page
 import Home from '@/views/Home'
 import NotFound from '@/views/NotFound'
 
-const Hdgl = React.lazy(() => import('@/views/Hdgl'))
+const Hdgl = withAuth(React.lazy(() => import('@/views/Hdgl')))
 
 function App() {
   return (
