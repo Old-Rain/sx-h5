@@ -1,8 +1,14 @@
+/**
+ * 鉴权中
+ */
+
+// react
 import React, { useEffect } from 'react'
 import { FC, PropsWithChildren } from 'react'
 import { withRouter } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router-dom'
 
+// component
 import Nav from '@/components/Nav'
 import { Toast } from 'antd-mobile'
 

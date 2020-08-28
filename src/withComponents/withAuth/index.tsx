@@ -1,24 +1,28 @@
+/**
+ * 鉴权高阶组件
+ */
+
 // react
 import React, { useState, useEffect, useRef } from 'react'
 import { ComponentClass, LazyExoticComponent, FC, PropsWithChildren } from 'react'
 import { Unsubscribe } from 'redux'
 
 // component
-import LoadFail from '@/views/LoadFail'
-import Loading from '@/views/Loading'
+import Loading from '@/components/Loading'
+import LoadFail from '@/components/LoadFail'
 
 // store
 import store from '@/store'
 import { appLogin } from '@/utils/appAuth'
 import { USER } from '@/store/modules/user/actionTypes'
 
-interface withAuthProps {}
+interface AuthProps {}
 
 const withAuth = (
   Component: ComponentClass<any> | FC<any> | LazyExoticComponent<any>,
   pageName: string,
-): FC<withAuthProps> => {
-  const Auth: FC<withAuthProps> = (props: PropsWithChildren<withAuthProps>) => {
+): FC<AuthProps> => {
+  const Auth: FC<AuthProps> = (props: PropsWithChildren<AuthProps>) => {
     const [authStatus, setAuthStatus] = useState(store.getState().userModule.authStatus)
     const unsubscribe = useRef<Unsubscribe>(() => {})
 
@@ -31,21 +35,23 @@ const withAuth = (
       return () => {
         // 卸载订阅者的监听
         unsubscribe.current()
+      }
+    }, [authStatus])
 
+    useEffect(() => {
+      // 是否需要鉴权
+      if (store.getState().userModule.authStatus !== 1) {
+        appLogin()
+      }
+
+      return () => {
         // 如果鉴权失败，离开页面将状态改为未鉴权状态，下次进来继续执行鉴权操作
-        if (authStatus !== 1) {
+        if (store.getState().userModule.authStatus !== 1) {
           store.dispatch({
             type: USER.UPDATE_AUTH_STATUS,
             value: 0,
           })
         }
-      }
-    }, [authStatus])
-
-    // 是否需要鉴权
-    useEffect(() => {
-      if (store.getState().userModule.authStatus !== 1) {
-        appLogin()
       }
     }, [])
 
@@ -59,7 +65,7 @@ const withAuth = (
           <LoadFail pageName={pageName} />
         ) : authStatus === 1 ? (
           // 鉴权成功
-          <Component {...props} />
+          <Component pageName={pageName} {...props} />
         ) : (
           ''
         )}

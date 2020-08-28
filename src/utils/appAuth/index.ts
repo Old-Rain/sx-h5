@@ -22,32 +22,32 @@ import { UserInfo } from '@/store/modules/user/types'
 
 // 鉴权失败
 function authFail() {
-  let timer: NodeJS.Timeout | null = setTimeout(() => {
-    clearTimeout(Number(timer))
-    timer = null
+  // let timer: NodeJS.Timeout | null = setTimeout(() => {
+  //   clearTimeout(Number(timer))
+  // timer = null
 
-    store.dispatch({
-      type: USER.UPDATE_AUTH_STATUS,
-      value: -1,
-    })
-  }, 2000)
+  store.dispatch({
+    type: USER.UPDATE_AUTH_STATUS,
+    value: -1,
+  })
+  // }, 2000)
 }
 
 // 鉴权成功
 function authPass(value: UserInfo) {
-  let timer: NodeJS.Timeout | null = setTimeout(() => {
-    clearTimeout(Number(timer))
-    timer = null
+  // let timer: NodeJS.Timeout | null = setTimeout(() => {
+  //   clearTimeout(Number(timer))
+  //   timer = null
 
-    store.dispatch({
-      type: USER.UPDATE_AUTH_STATUS,
-      value: 1,
-    })
-    store.dispatch({
-      type: USER.UPDATE_USER_INFO,
-      value,
-    })
-  }, 2000)
+  store.dispatch({
+    type: USER.UPDATE_AUTH_STATUS,
+    value: 1,
+  })
+  store.dispatch({
+    type: USER.UPDATE_USER_INFO,
+    value,
+  })
+  // }, 2000)
 }
 
 // 异步加载cordova计数器

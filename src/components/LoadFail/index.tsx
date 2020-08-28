@@ -1,8 +1,14 @@
+/**
+ * 鉴权失败
+ */
+
+// react
 import React from 'react'
 import { FC, PropsWithChildren } from 'react'
 import { withRouter } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router-dom'
 
+// component
 import Nav from '@/components/Nav'
 import LoseStatus from '@/components/LoseStatus'
 

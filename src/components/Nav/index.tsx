@@ -1,7 +1,15 @@
+/**
+ * 导航栏
+ */
+
+// react
 import React from 'react'
 import { FC, PropsWithChildren, ReactNode } from 'react'
 
+// component
 import { NavBar, Icon } from 'antd-mobile'
+
+// tool
 import { getStatusBarHeight } from '@/utils/tool'
 
 import styles from './index.module.scss'

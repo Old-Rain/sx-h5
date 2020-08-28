@@ -122,7 +122,7 @@
             {
               "id": "cg9f1233a8888843b677b43b3bb611a3",
               "fieldNo": "C004",
-              "fieldIndicatorName": "投保书只做量",
+              "fieldIndicatorName": "投保书制作量",
               "indexUnit": "份",
               "currentSituation": "45",
               "lastYearData": null,

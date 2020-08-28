@@ -1,3 +1,5 @@
+@import '@/styles/global.scss';
+
 .NavBarPlaceHolder {
   height: 44px;
   background: #ececec;
@@ -9,6 +11,9 @@
   }
   & :global(.am-navbar) {
     height: 44px;
+    :global(.am-navbar-title) {
+      font-size: $fontSizeTitle;
+    }
   }
   & :global(.am-navbar-light) {
     background: transparent;
