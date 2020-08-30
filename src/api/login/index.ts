@@ -11,3 +11,11 @@ export function userInfo(data: UserInfoParams) {
     data,
   })
 }
+
+export function keepToken() {
+  return request<Res>({
+    url: `${baseURL}/mock/login/keepToken.json`,
+    method: 'GET',
+    data: {},
+  })
+}
