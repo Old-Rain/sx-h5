@@ -1,3 +1,3 @@
-export interface UserInfoParams {
+export interface UserInfoIn {
   code: string
 }

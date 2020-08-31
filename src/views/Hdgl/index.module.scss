@@ -1,17 +1,16 @@
 @import '~@/styles/global';
 
 .Hdgl {
-  padding-top: 80px;
-  height: 1000px;
+  padding-top: 88px;
 
   .dateBar {
     position: fixed;
     left: 0;
     top: 0;
     margin-top: 44px;
-    padding: 24px 0 0;
+    padding: 16px 0 0;
     width: 100%;
-    height: 40px;
+    height: 50px;
     background: #f6f7fb;
     color: $textColorSub2;
 
@@ -20,7 +19,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 16px;
-      height: 40px;
+      height: 50px;
 
       .dateBtn {
         position: relative;
@@ -36,6 +35,61 @@
           border-top: 6px solid $textColorSub2;
           border-left: 4px solid transparent;
           border-right: 4px solid transparent;
+        }
+      }
+    }
+  }
+
+  .indexItem {
+    padding: 0 16px 11px;
+
+    .indexTitle {
+      height: 33px;
+      line-height: 26px;
+      font-weight: bold;
+    }
+
+    .indexItemSub {
+      overflow: hidden;
+      margin: 0 -5.5px;
+
+      .indexItemSubCard {
+        box-sizing: border-box;
+        overflow: hidden;
+        float: left;
+        margin: 0 5.5px 11px;
+        padding: 16px 24px 0;
+        width: 166px;
+        height: 108px;
+        border-radius: 8px;
+        background: url('~@/assets/hdgl/index_bg.png') no-repeat;
+        background-size: 100%;
+
+        &-A {
+          background-position: 0 0;
+        }
+        &-B {
+          background-position: 0 -108px;
+        }
+        &-C {
+          background-position: 0 -216px;
+        }
+        &-D {
+          background-position: 0 -324px;
+        }
+
+        .situation {
+          font-size: 28px;
+          color: #ff7f5c;
+          .unit {
+            font-size: 12px;
+          }
+        }
+
+        .indexName {
+          margin-top: 4px;
+          font-size: 14px;
+          color: #545a6b;
         }
       }
     }

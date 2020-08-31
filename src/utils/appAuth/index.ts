@@ -4,7 +4,7 @@ import { Code } from '../cordova/types'
 
 // api
 import { userInfo } from '@/api/login'
-import { UserInfoParams } from '@/api/login/types'
+import { UserInfoIn } from '@/api/login/types'
 
 // store
 import store from '@/store'
@@ -120,8 +120,8 @@ function advanceCode() {
 
 // 加强版获取用户信息
 let advanceUserInfoCount = 0
-function advanceUserInfo(data: UserInfoParams) {
-  userInfo(data)
+function advanceUserInfo(data: UserInfoIn) {
+  userInfo<UserInfo>(data)
     .then(({ data }) => {
       console.log('获取用户信息成功', data)
 

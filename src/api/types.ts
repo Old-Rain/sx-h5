@@ -1,5 +1,5 @@
-export interface Res {
+export interface Res<T = any> {
   code: string
   message: string
-  data: any
+  data: T
 }

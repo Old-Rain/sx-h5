@@ -9,13 +9,17 @@ import { RouteComponentProps } from 'react-router-dom'
 
 // component
 import Nav from '@/components/Nav'
-import { DatePicker } from 'antd-mobile'
+import { Toast, DatePicker } from 'antd-mobile'
 
 import styles from './index.module.scss'
 
-import { selectEmpIndexDetail } from '@/api/hdgl'
 import { getStatusBarHeight } from '@/utils/tool'
 import moment from 'moment'
+
+import { selectEmpIndexDetail } from '@/api/hdgl'
+
+import fieldNameConfig from './fieldNameConfig'
+console.log(fieldNameConfig)
 
 // 昨天
 function yesterday() {
@@ -71,16 +75,51 @@ interface HdglProps extends RouteComponentProps {
   pageName: string
 }
 
+// 指标列表
+interface SecondaryResList {
+  secondaryType: string
+  secondaryName: string
+  fieldIndicatorResList: {
+    id: string
+    fieldNo: string
+    fieldIndicatorName: string
+    indexUnit: string
+    currentSituation: string | null
+    lastYearData: string | null
+    areaAverage: string | null
+  }[]
+}
+
 const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
+  // 时间选择
   const [selectDate, setSelectDate] = useState<Date>(yesterday())
 
+  // 指标列表
+  const [secondaryResList, setSecondaryResList] = useState<SecondaryResList[]>([])
+
   useEffect(() => {
-    console.log(+yesterday())
     ;(async function () {
-      const { data: res } = await selectEmpIndexDetail()
-      console.log(res)
+      Toast.loading('加载中...', 0)
+      const { data: res } = await selectEmpIndexDetail<{
+        indicatorRes: {
+          secondaryResList: SecondaryResList[]
+        }
+      }>()
+      Toast.hide()
+
+      if (res.code !== '00') {
+        Toast.info(res.message || '未知错误')
+
+        return
+      }
+
+      setSecondaryResList(res.data.indicatorRes.secondaryResList)
     })()
   }, [selectDate])
+
+  useEffect(() => {
+    console.log('secondaryResList', secondaryResList)
+  }, [secondaryResList])
 
   return (
     <>
@@ -105,7 +144,36 @@ const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
             </div>
           </DatePicker>
         </div>
-        天塌地陷紫金锤
+
+        {/* 指标列表 */}
+        {secondaryResList.map((item, index) => (
+          <div className={styles.indexItem} key={item.secondaryType}>
+            <div className={styles.indexTitle}>{item.secondaryName}</div>
+            <div className={styles.indexItemSub}>
+              {item.fieldIndicatorResList.map((item1, index1) => (
+                <div
+                  key={item1.id}
+                  className={[styles.indexItemSubCard, styles[`indexItemSubCard-${item.secondaryType}`]].join(' ')}
+                >
+                  <div className={styles.situation}>
+                    {item1.currentSituation ? (
+                      <>
+                        {item1.indexUnit === '%' ? (+item1.currentSituation).toFixed(2) : item1.currentSituation}
+                        <span className={styles.unit}>{item1.indexUnit}</span>
+                      </>
+                    ) : (
+                      '-'
+                    )}
+                  </div>
+                  <div
+                    className={styles.indexName}
+                    dangerouslySetInnerHTML={{ __html: fieldNameConfig[item1.fieldNo].semantic }}
+                  ></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </>
   )
