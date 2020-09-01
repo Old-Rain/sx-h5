@@ -13,17 +13,22 @@ import { Toast, DatePicker } from 'antd-mobile'
 
 import styles from './index.module.scss'
 
-import { getStatusBarHeight } from '@/utils/tool'
 import moment from 'moment'
+import { getStatusBarHeight } from '@/utils/tool'
 
 import { selectEmpIndexDetail } from '@/api/hdgl'
 
 import fieldNameConfig from './fieldNameConfig'
-console.log(fieldNameConfig)
 
 // 昨天
 function yesterday() {
   return new Date(+new Date() - 1000 * 60 * 60 * 24)
+}
+
+// 三年前
+function beforeThreeYear() {
+  const theDate = new Date()
+  return new Date(theDate.getFullYear() - 3, theDate.getMonth())
 }
 
 // 获取所选时间所在月份的最后一天
@@ -133,6 +138,8 @@ const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
           <DatePicker
             title="选择时间"
             mode="month"
+            minDate={beforeThreeYear()}
+            maxDate={yesterday()}
             value={selectDate}
             onChange={(date) => {
               setSelectDate(date)
