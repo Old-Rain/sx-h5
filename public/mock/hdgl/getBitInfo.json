@@ -1,0 +1,36 @@
+{
+  "code": "00",
+  "message": "成功",
+  "data": [
+    {
+      "clientName": "张三",
+      "clientId": "sa51dfsed515erg1ergreth78tr",
+      "customerIndex": "15"
+    },
+    {
+      "clientName": "李四",
+      "clientId": "fe51dfsed515erg1eaareth78tr",
+      "customerIndex": "15"
+    },
+    {
+      "clientName": "李四2",
+      "clientId": "fe51dfsed515erg1ee7reth78tr",
+      "customerIndex": "15"
+    },
+    {
+      "clientName": "李四3",
+      "clientId": "fe51dfsed515erg1g9areth78tr",
+      "customerIndex": "15"
+    },
+    {
+      "clientName": "李四4",
+      "clientId": "fe91dfsed515erg1eaareth78tr",
+      "customerIndex": "15"
+    },
+    {
+      "clientName": "李四5",
+      "clientId": "fe51dfsed515erg1ea78eth78tr",
+      "customerIndex": "15"
+    }
+  ]
+}
