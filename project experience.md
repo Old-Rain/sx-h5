@@ -180,7 +180,7 @@ module.exports = {
             minPixelValue: 3, // 小于该值的不会被转换（等于的也会被转换）
             // mediaQuery: false, // 是否在媒体查询的css代码中也进行转换，默认false（好像并不生效）
             replace: true, // 是否转换后直接更换属性值
-            exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配
+            exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配（好像并不生效）
             landscape: false, // 是否处理横屏情况
           }),
         ],
