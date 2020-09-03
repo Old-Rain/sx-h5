@@ -10,7 +10,8 @@ import { RouteComponentProps } from 'react-router-dom'
 
 // component
 import Nav from '@/components/Nav'
-import { Toast, Menu } from 'antd-mobile'
+import PullDownMenu from '@/components/PullDownMenu'
+import { Toast } from 'antd-mobile'
 
 import styles from './index.module.scss'
 import defaultAvater from '@/assets/hdgl/default_avater.png'
@@ -67,22 +68,22 @@ function theAPI(isDetailPage: IsDetailPage, data: GetClientOrBitInfo) {
 
 const sortMenu0: SortMenu[] = [
   {
-    label: '注册时间由远到近',
+    label: '注册时间由近到远',
     value: '0',
   },
   {
-    label: '注册时间近远到远',
+    label: '注册时间由远到近',
     value: '1',
   },
 ]
 
 const sortMenu1: SortMenu[] = [
   {
-    label: '客户阅读量由少到多',
+    label: '客户阅读量由多到少',
     value: '0',
   },
   {
-    label: '客户阅读量由多到少',
+    label: '客户阅读量由少到多',
     value: '1',
   },
 ]
@@ -95,13 +96,16 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
   const [clientList, setClientList] = useState<Client[]>([])
 
   // 客户列表顺序
-  const [sort, setSort] = useState<Sort>('1') // 1 升序、0 降序
+  const [sort, setSort] = useState<Sort>('0') //  0升序、1降序
+
+  // 排序菜单面板
+  const [show, setShow] = useState<boolean>(false)
 
   // 排序菜单
   const [sortMenu, setSortMenu] = useState<SortMenu[]>([])
 
-  // 排序菜单面板
-  const [show, setShow] = useState<boolean>(false)
+  // 排序菜单选中项
+  const [sortMenuActiveIndex, setSortMenuActiveIndex] = useState<number>(0)
 
   // 赋值排序菜单
   useLayoutEffect(() => {
@@ -116,6 +120,7 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
     setSortMenu(temp)
   }, [isDetailPage])
 
+  // 监听sort，其他三个依赖只会在初始时加载一次
   useEffect(() => {
     ;(async function () {
       Toast.loading('加载中...', 0)
@@ -134,6 +139,7 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
       }
 
       setClientList(res.data)
+      document.querySelector('#root')!.scrollTop = 0
     })()
   }, [sort, isDetailPage, fieldNo, selectDate])
 
@@ -146,21 +152,31 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
         {/* 时间栏 */}
         <div className={styles.dateAndSort} style={{ top: `${getStatusBarHeight()}px` }}>
           <div className={styles.date}>{`${selectDate.replace('-', '年')}月`}</div>
-          <div className={[styles.sort, show ? styles.sortShow : ''].join(' ')}>
+          <div className={[styles.sortArea, show ? styles.sortShow : ''].join(' ')}>
             <button onClick={() => setShow(!show)}>排序</button>
           </div>
         </div>
 
         {/* 排序菜单 */}
-        <div className={styles.sortMenu} style={{ display: show ? 'block' : 'none', top: `${getStatusBarHeight()}px` }}>
-          <Menu className="single-foo-menu" data={sortMenu} value={['1']} level={1} height={0} />
-        </div>
+        <PullDownMenu
+          show={show}
+          top={`calc(${getStatusBarHeight()}px + 1.1rem)`}
+          close={() => setShow(false)}
+          optionList={sortMenu}
+          active={sortMenuActiveIndex}
+          onChange={({ value }, index) => {
+            setSort(value as Sort)
+            setSortMenuActiveIndex(index)
+          }}
+        />
 
         {/* 客户列表 */}
         {isDetailPage === '0'
           ? clientList.map((item, index) => (
               <div className={styles.client} key={index}>
-                <img src={defaultAvater} alt="" />
+                <div className={styles.avater}>
+                  <img src={defaultAvater} alt="" />
+                </div>
                 <div className={[styles.info, styles.info0].join(' ')}>
                   <p>{item.clientName}</p>
                   <span>
@@ -172,7 +188,16 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
           : isDetailPage === '1'
           ? clientList.map((item, index) => (
               <div className={styles.client} key={index}>
-                <img src={defaultAvater} alt="" />
+                <div className={styles.avater}>
+                  {sort === '0' && index <= 2 ? (
+                    <i className={[styles.sort, styles[`sort${index}`]].join(' ')}></i>
+                  ) : sort === '1' && index >= clientList.length - 3 ? (
+                    <i className={[styles.sort, styles[`sort${clientList.length - 1 - index}`]].join(' ')}></i>
+                  ) : (
+                    ''
+                  )}
+                  <img src={defaultAvater} alt="" />
+                </div>
                 <div className={[styles.info, styles.info1].join(' ')}>
                   <p>{item.clientName}</p>
                   <span>
