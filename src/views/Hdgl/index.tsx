@@ -20,13 +20,43 @@ import { selectEmpIndexDetail } from '@/api/hdgl'
 
 import fieldNameConfig from './fieldNameConfig'
 
+/**
+ * props
+ */
+interface HdglProps extends RouteComponentProps {
+  pageName: string
+}
+
+/**
+ * 指标列表
+ */
+interface FieldIndicatorResList {
+  isDetailPage?: '0' | '1'
+  id: string
+  fieldNo: string
+  fieldIndicatorName: string
+  indexUnit: string
+  currentSituation: string | null
+  lastYearData: string | null
+  areaAverage: string | null
+}
+
+/**
+ * 指标类型列表
+ */
+interface SecondaryResList {
+  secondaryType: string
+  secondaryName: string
+  fieldIndicatorResList: FieldIndicatorResList[]
+}
+
 // 昨天
-function yesterday() {
+function yesterday(): Date {
   return new Date(+new Date() - 1000 * 60 * 60 * 24)
 }
 
 // 三年前
-function beforeThreeYear() {
+function beforeThreeYear(): Date {
   const theDate = new Date()
   return new Date(theDate.getFullYear() - 3, theDate.getMonth())
 }
@@ -76,25 +106,6 @@ function dateRangeFormat(val: Date): string {
   return '-'
 }
 
-interface HdglProps extends RouteComponentProps {
-  pageName: string
-}
-
-// 指标列表
-interface SecondaryResList {
-  secondaryType: string
-  secondaryName: string
-  fieldIndicatorResList: {
-    id: string
-    fieldNo: string
-    fieldIndicatorName: string
-    indexUnit: string
-    currentSituation: string | null
-    lastYearData: string | null
-    areaAverage: string | null
-  }[]
-}
-
 const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
   // 时间选择
   const [selectDate, setSelectDate] = useState<Date>(yesterday())
@@ -102,6 +113,17 @@ const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
   // 指标列表
   const [secondaryResList, setSecondaryResList] = useState<SecondaryResList[]>([])
 
+  // 前往下钻页面
+  function toDownDrill({ isDetailPage, fieldNo, fieldIndicatorName }: FieldIndicatorResList): void {
+    props.history.push('/hdgl/downdirll', {
+      isDetailPage,
+      fieldNo,
+      fieldIndicatorName,
+      selectDate: moment(selectDate).format('YYYY-MM'),
+    })
+  }
+
+  // 监听selectDate
   useEffect(() => {
     ;(async function () {
       Toast.loading('加载中...', 0)
@@ -112,19 +134,35 @@ const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
       }>()
       Toast.hide()
 
+      // 接口错误
       if (res.code !== '00') {
         Toast.info(res.message || '未知错误')
 
         return
       }
 
+      for (const iterator of res.data.indicatorRes.secondaryResList) {
+        for (const iterator1 of iterator.fieldIndicatorResList) {
+          // 这几个没有详情页
+          if (
+            iterator1.fieldNo === 'A001' ||
+            iterator1.fieldNo === 'A002' ||
+            iterator1.fieldNo === 'A004' ||
+            iterator1.fieldNo === 'B002'
+          ) {
+            iterator1.isDetailPage = '0'
+          }
+
+          // 其余的都有详情页
+          else {
+            iterator1.isDetailPage = '1'
+          }
+        }
+      }
+
       setSecondaryResList(res.data.indicatorRes.secondaryResList)
     })()
   }, [selectDate])
-
-  useEffect(() => {
-    console.log('secondaryResList', secondaryResList)
-  }, [secondaryResList])
 
   return (
     <>
@@ -161,6 +199,7 @@ const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
                 <div
                   key={item1.id}
                   className={[styles.indexItemSubCard, styles[`indexItemSubCard-${item.secondaryType}`]].join(' ')}
+                  onClick={() => toDownDrill(item1)}
                 >
                   <div className={styles.situation}>
                     {item1.currentSituation ? (

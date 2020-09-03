@@ -9,6 +9,13 @@ const routes: TheRoute[] = [
     isBuryPoint: true,
     component: lazy(() => import('./index')),
   },
+  {
+    path: '/hdgl/downdirll',
+    name: '活动指标下钻页面',
+    // isExact: true,
+    isBuryPoint: true,
+    component: lazy(() => import('./DownDrill')),
+  },
 ]
 
 export default routes

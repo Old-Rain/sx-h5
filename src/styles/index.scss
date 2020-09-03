@@ -1,4 +1,4 @@
-@import './global.scss';
+@import '~@/styles/global.scss';
 
 body {
   margin: 0;
@@ -32,6 +32,13 @@ ol,
 dl,
 li {
   list-style: none;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
 }
 
 .clearBoth::after {

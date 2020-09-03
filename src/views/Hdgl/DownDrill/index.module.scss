@@ -1,0 +1,109 @@
+@import '~@/styles/global.scss';
+
+.DownDrill {
+  padding: 82px 15px 0;
+
+  .dateAndSort {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin-top: 44px;
+    padding: 16px 15px 0;
+    width: 100%;
+    height: 66px;
+    background: #f6f7fb;
+
+    .date {
+      line-height: 50px;
+      color: $textColorSub2;
+    }
+
+    .sort {
+      line-height: 50px;
+      button {
+        position: relative;
+        padding-right: 12px;
+        color: $textColorSub2;
+        &::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          border: 4px solid transparent;
+          border-top-color: $textColorSub2;
+          border-bottom: 0;
+          transition: transform 0.3s;
+        }
+      }
+    }
+    .sortShow button::after {
+      transform: translateY(-50%) rotate(180deg);
+      border-top-color: #108ee9;
+    }
+  }
+
+  .sortMenu {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 110px;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .client {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 82px;
+    background: #fff;
+    border-radius: 4px;
+
+    img {
+      margin: 0 17px;
+      width: 46px;
+      height: 46px;
+    }
+
+    .info {
+      flex: 1;
+      display: flex;
+      height: 82px;
+
+      p {
+        font-size: $fontSizeTitle;
+        color: $textColorPrimary;
+      }
+      p + span {
+        color: $textColorSub2;
+      }
+
+      &0 {
+        flex-direction: column;
+        justify-content: center;
+        p + span {
+          margin-top: 10px;
+        }
+      }
+
+      &1 {
+        justify-content: space-between;
+        align-items: center;
+        p + span {
+          margin-right: 8px;
+          button {
+            padding-right: 24px;
+            line-height: 24px;
+            background: url('~@/assets/common/arrow.png') no-repeat right -24px;
+            background-size: 24px 96px;
+            color: $textColorSub2;
+          }
+        }
+      }
+    }
+  }
+}
