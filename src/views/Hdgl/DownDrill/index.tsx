@@ -3,7 +3,7 @@
  */
 
 // react
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { FC, PropsWithChildren } from 'react'
 import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
@@ -12,6 +12,8 @@ import { RouteComponentProps } from 'react-router-dom'
 import Nav from '@/components/Nav'
 import PullDownMenu from '@/components/PullDownMenu'
 import { Toast } from 'antd-mobile'
+import { List as VList, AutoSizer } from 'react-virtualized'
+import { ListRowProps } from 'react-virtualized'
 
 import styles from './index.module.scss'
 import defaultAvater from '@/assets/hdgl/default_avater.png'
@@ -107,6 +109,8 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
   // 排序菜单选中项
   const [sortMenuActiveIndex, setSortMenuActiveIndex] = useState<number>(0)
 
+  const vListRef = useRef<VList>(null)
+
   // 赋值排序菜单
   useLayoutEffect(() => {
     let temp: SortMenu[] = []
@@ -118,7 +122,9 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
     }
 
     setSortMenu(temp)
-  }, [isDetailPage])
+
+    // eslint-disable-next-line
+  }, [])
 
   // 监听sort，其他三个依赖只会在初始时加载一次
   useEffect(() => {
@@ -138,10 +144,85 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
         return
       }
 
+      // 列表回到初始位置
+      vListRef.current?.scrollToRow(0)
+
+      // 为第一个添加空值，撑高度
+      res.data.unshift({
+        clientName: '',
+        clientId: '',
+        customerIndex: '',
+      })
+
+      // 为最后一个添加空值，撑高度
+      res.data.push({
+        clientName: '',
+        clientId: '',
+        customerIndex: '',
+      })
+
       setClientList(res.data)
-      document.querySelector('#root')!.scrollTop = 0
     })()
-  }, [sort, isDetailPage, fieldNo, selectDate])
+
+    // eslint-disable-next-line
+  }, [sort])
+
+  // 无二级页面
+  const Client0 = ({ key, index, style }: ListRowProps) => {
+    console.log('昂贵的计算0')
+
+    if (!index) {
+      return <div className={styles.magic} key={key}></div>
+    }
+
+    return (
+      <div className={styles.vlist} style={style} key={key}>
+        <div className={styles.client}>
+          <div className={styles.avater}>
+            <img src={defaultAvater} alt="" />
+          </div>
+          <div className={[styles.info, styles.info0].join(' ')}>
+            <p>{clientList[index].clientName}</p>
+            <span>
+              {fieldNameConfig[fieldNo].dtbs}：{clientList[index].customerIndex}
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 有二级页面
+  const Client1 = ({ key, index, style }: ListRowProps) => {
+    console.log('昂贵的计算1')
+
+    if (!index || index === clientList.length - 1) {
+      return <div className={styles.magic} key={key}></div>
+    }
+
+    return (
+      <div className={styles.vlist} style={style} key={key}>
+        <div className={styles.client}>
+          <div className={styles.avater}>
+            {sort === '0' && index >= 1 && index <= 3 ? (
+              <i className={[styles.sort, styles[`sort${index}`]].join(' ')}></i>
+            ) : sort === '1' && index >= clientList.length - 4 && index <= clientList.length - 2 ? (
+              <i className={[styles.sort, styles[`sort${clientList.length - 1 - index}`]].join(' ')}></i>
+            ) : (
+              ''
+            )}
+            <img src={defaultAvater} alt="" />
+          </div>
+          <div className={[styles.info, styles.info1].join(' ')}>
+            <p>{clientList[index].clientName}</p>
+            <span>
+              <button>{clientList[index].customerIndex}次</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -170,43 +251,26 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
           }}
         />
 
-        {/* 客户列表 */}
-        {isDetailPage === '0'
-          ? clientList.map((item, index) => (
-              <div className={styles.client} key={index}>
-                <div className={styles.avater}>
-                  <img src={defaultAvater} alt="" />
-                </div>
-                <div className={[styles.info, styles.info0].join(' ')}>
-                  <p>{item.clientName}</p>
-                  <span>
-                    {fieldNameConfig[fieldNo].dtbs}：{item.customerIndex}
-                  </span>
-                </div>
-              </div>
-            ))
-          : isDetailPage === '1'
-          ? clientList.map((item, index) => (
-              <div className={styles.client} key={index}>
-                <div className={styles.avater}>
-                  {sort === '0' && index <= 2 ? (
-                    <i className={[styles.sort, styles[`sort${index}`]].join(' ')}></i>
-                  ) : sort === '1' && index >= clientList.length - 3 ? (
-                    <i className={[styles.sort, styles[`sort${clientList.length - 1 - index}`]].join(' ')}></i>
-                  ) : (
-                    ''
-                  )}
-                  <img src={defaultAvater} alt="" />
-                </div>
-                <div className={[styles.info, styles.info1].join(' ')}>
-                  <p>{item.clientName}</p>
-                  <span>
-                    <button>{item.customerIndex}次</button>
-                  </span>
-                </div>
-              </div>
-            ))
-          : ''}
+        <div className={styles.vlistWrap} style={{ marginTop: `${getStatusBarHeight()}px` }}>
+          <AutoSizer>
+            {({ width, height }) => {
+              let rowRenderer = isDetailPage === '0' ? Client0 : isDetailPage === '1' ? Client1 : () => ''
+              let rowHeight0 = (window.innerWidth / 375) * 16
+              let rowHeight = (window.innerWidth / 375) * 92
+
+              return (
+                <VList
+                  ref={vListRef}
+                  width={width} // 设置列表项所在盒子的宽高
+                  height={height}
+                  rowCount={clientList.length} // 设置总行数
+                  rowHeight={({ index }) => (!index || index === clientList.length - 1 ? rowHeight0 : rowHeight)} // 第一个和最后一个空值用16px的空div
+                  rowRenderer={rowRenderer} // 需要渲染内容
+                />
+              )
+            }}
+          </AutoSizer>
+        </div>
       </div>
     </>
   )

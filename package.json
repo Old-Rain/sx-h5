@@ -17,11 +17,13 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-virtualized": "^9.22.2",
     "redux": "^4.0.5",
     "typescript": "~3.7.2"
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.5",
+    "@types/react-virtualized": "^9.21.10",
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^1.0.0",
     "node-sass": "^4.14.1",

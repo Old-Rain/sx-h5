@@ -26,8 +26,8 @@ const withAuth = (
     const [authStatus, setAuthStatus] = useState(store.getState().userModule.authStatus)
     const unsubscribe = useRef<Unsubscribe>(() => {})
 
+    // 监听authStatus
     useEffect(() => {
-      // 监听authStatus
       unsubscribe.current = store.subscribe(() => {
         setAuthStatus(store.getState().userModule.authStatus)
       })
@@ -40,7 +40,7 @@ const withAuth = (
 
     useEffect(() => {
       // 是否需要鉴权
-      if (store.getState().userModule.authStatus !== 1) {
+      if (authStatus !== 1) {
         appLogin()
       }
 
@@ -53,6 +53,8 @@ const withAuth = (
           })
         }
       }
+
+      // eslint-disable-next-line
     }, [])
 
     return (

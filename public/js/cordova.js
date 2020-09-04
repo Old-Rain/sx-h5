@@ -32,7 +32,7 @@
           let isLuck = Math.random()
           console.log(isLuck)
 
-          if (isLuck > 0) {
+          if (isLuck > 0.8) {
             resolve()
           } else {
             reject()

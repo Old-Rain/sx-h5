@@ -183,11 +183,10 @@ const Hdgl: FC<HdglProps> = (props: PropsWithChildren<HdglProps>) => {
               setSelectDate(date)
             }}
           >
-            <div className={styles.dateBarContainer}>
-              <div className={styles.dateBtn}>{moment(selectDate).format('YYYY年MM月')}</div>
-              <div>统计时间：{dateRangeFormat(selectDate)}</div>
-            </div>
+            <div className={styles.dateBtn}>{moment(selectDate).format('YYYY年MM月')}</div>
           </DatePicker>
+
+          <div>统计时间：{dateRangeFormat(selectDate)}</div>
         </div>
 
         {/* 指标列表 */}
