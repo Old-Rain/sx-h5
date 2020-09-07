@@ -254,9 +254,14 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
         <div className={styles.vlistWrap} style={{ marginTop: `${getStatusBarHeight()}px` }}>
           <AutoSizer>
             {({ width, height }) => {
+              // 渲染内容
               let rowRenderer = isDetailPage === '0' ? Client0 : isDetailPage === '1' ? Client1 : () => ''
-              let rowHeight0 = (window.innerWidth / 375) * 16
-              let rowHeight = (window.innerWidth / 375) * 92
+
+              // 首尾空行高度
+              let rowHeightEmpty = (window.innerWidth / 375) * 16
+
+              // 普通行高
+              let rowHeightNormal = (window.innerWidth / 375) * 92
 
               return (
                 <VList
@@ -264,7 +269,7 @@ const DownDrill: FC<DownDrillProps> = (props: PropsWithChildren<DownDrillProps>)
                   width={width} // 设置列表项所在盒子的宽高
                   height={height}
                   rowCount={clientList.length} // 设置总行数
-                  rowHeight={({ index }) => (!index || index === clientList.length - 1 ? rowHeight0 : rowHeight)} // 第一个和最后一个空值用16px的空div
+                  rowHeight={({ index }) => (!index || index === clientList.length - 1 ? rowHeightEmpty : rowHeightNormal)} // 第一个和最后一个空值用16px的空div
                   rowRenderer={rowRenderer} // 需要渲染内容
                 />
               )
