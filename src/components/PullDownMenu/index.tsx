@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useEffect } from 'react'
 import { FC, PropsWithChildren } from 'react'
 
 import styles from './index.module.scss'
@@ -51,9 +51,7 @@ const PullDownMenu: FC<PullDownMenuProps> = (props: PropsWithChildren<PullDownMe
 
   const [height, setHeight] = useState<string>('0')
   const [opacity, setOpacity] = useState<string>('0')
-  const [display, setDisplay] = useState<string>('none')
-
-  const displayTimer = useRef<NodeJS.Timeout | null>(null)
+  const [display, setDisplay] = useState<'block' | 'none'>('none')
 
   // 选项点击事件
   function optionItemClick(item: Option, index: number) {
@@ -65,57 +63,49 @@ const PullDownMenu: FC<PullDownMenuProps> = (props: PropsWithChildren<PullDownMe
 
   // 显示/隐藏动画
   useLayoutEffect(() => {
-    const height = show ? `${optionList.length * 0.36}rem` : '0'
-    const opacity = show ? '1' : '0'
-    const display = show ? 'block' : 'none'
-
+    // 显示时，先设置display
     if (show) {
-      Promise.resolve()
-        .then(() => {
-          setDisplay(display)
-
-          return Promise.resolve()
-        })
-        .then(() => {
-          displayTimer.current = setTimeout(() => {
-            clearTimeout(Number(displayTimer.current))
-            displayTimer.current = null
-
-            setHeight(height)
-            setOpacity(opacity)
-          }, 0)
-        })
-    } else {
-      setHeight(height)
-      setOpacity(opacity)
-      displayTimer.current = setTimeout(() => {
-        clearTimeout(Number(displayTimer.current))
-        displayTimer.current = null
-
-        setDisplay(display)
-      }, 300)
+      setDisplay('block')
     }
 
-    return () => {
-      clearTimeout(Number(displayTimer.current))
-      displayTimer.current = null
+    // 隐藏时，先设置height和opacity
+    else {
+      setHeight('0')
+      setOpacity('0')
     }
-  }, [show, optionList])
+  }, [show])
+
+  // display为block后再显示height和opacity
+  useEffect(() => {
+    if (display === 'block') {
+      setHeight(`${optionList.length * 0.36}rem`)
+      setOpacity('1')
+    }
+
+    // eslint-disable-next-line
+  }, [display])
+
+  // 隐藏组件时，过渡结束后再隐藏
+  function hide() {
+    !show && setDisplay('none')
+  }
 
   return (
     <div className={styles.PullDownMenu} style={{ display, top }}>
-      <div className={styles.optionList} style={{ height }}>
-        {optionList.map((item, index) => (
-          <div
-            key={index}
-            className={[styles.optionItem, active === index ? styles.active : ''].join(' ')}
-            onClick={(e) => optionItemClick(item, index)}
-          >
-            {item.label}
-          </div>
-        ))}
+      <div className={styles.optionListWrap} style={{ height }}>
+        <div className={styles.optionList} style={{ height: `${optionList.length * 0.36}rem` }}>
+          {optionList.map((item, index) => (
+            <div
+              key={index}
+              className={[styles.optionItem, active === index ? styles.active : ''].join(' ')}
+              onClick={(e) => optionItemClick(item, index)}
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
       </div>
-      <div className={styles.mask} style={{ opacity }} onClick={close}></div>
+      <div className={styles.mask} style={{ opacity }} onClick={close} onTransitionEnd={hide}></div>
     </div>
   )
 }
