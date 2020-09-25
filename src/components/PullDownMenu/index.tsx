@@ -61,6 +61,11 @@ const PullDownMenu: FC<PullDownMenuProps> = (props: PropsWithChildren<PullDownMe
     close()
   }
 
+  // 隐藏组件时，过渡结束后再隐藏
+  function hide() {
+    !show && setDisplay('none')
+  }
+
   // 显示/隐藏动画
   useLayoutEffect(() => {
     // 显示时，先设置display
@@ -84,11 +89,6 @@ const PullDownMenu: FC<PullDownMenuProps> = (props: PropsWithChildren<PullDownMe
 
     // eslint-disable-next-line
   }, [display])
-
-  // 隐藏组件时，过渡结束后再隐藏
-  function hide() {
-    !show && setDisplay('none')
-  }
 
   return (
     <div className={styles.PullDownMenu} style={{ display, top }}>
