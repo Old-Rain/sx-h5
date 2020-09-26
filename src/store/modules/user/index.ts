@@ -37,7 +37,7 @@ const userModule: Reducer<UserState, CommonAction> = (state = userState, action)
       return newState
 
     default:
-      return state
+      return newState
   }
 }
 
