@@ -3,18 +3,20 @@
  */
 
 // react
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { ComponentClass, LazyExoticComponent, FC, PropsWithChildren } from 'react'
-import { Unsubscribe } from 'redux'
 
 // component
 import Loading from '@/components/Loading'
 import LoadFail from '@/components/LoadFail'
 
 // store
-import store from '@/store'
+import { Dispatch } from 'redux'
+import { useSelector, useDispatch, useStore, shallowEqual } from 'react-redux'
 import { appLogin } from '@/utils/appAuth'
+import { Modules, CommonAction } from '@/store/reducers'
 import { USER } from '@/store/modules/user/actionTypes'
+import { UserState } from '@/store/modules/user/index'
 
 interface AuthProps {}
 
@@ -23,31 +25,24 @@ const withAuth = (
   pageName: string,
 ): FC<AuthProps> => {
   const Auth: FC<AuthProps> = (props: PropsWithChildren<AuthProps>) => {
-    const [authStatus, setAuthStatus] = useState(store.getState().userModule.authStatus)
-    const unsubscribe = useRef<Unsubscribe>(() => {})
+    const store = useStore<Modules>()
 
-    // 监听authStatus
-    useEffect(() => {
-      unsubscribe.current = store.subscribe(() => {
-        setAuthStatus(store.getState().userModule.authStatus)
-      })
+    const dispatch = useDispatch<Dispatch<CommonAction>>()
 
-      return () => {
-        // 卸载订阅者的监听
-        unsubscribe.current()
-      }
-    }, [authStatus])
+    const userState = useSelector<Modules, UserState>((state) => state.userModule, shallowEqual)
+
+    const authStatus = useMemo(() => userState.authStatus, [userState])
 
     useEffect(() => {
       // 是否需要鉴权
-      if (authStatus !== 1) {
+      if (store.getState().userModule.authStatus !== 1) {
         appLogin()
       }
 
       return () => {
         // 如果鉴权失败，离开页面将状态改为未鉴权状态，下次进来继续执行鉴权操作
         if (store.getState().userModule.authStatus !== 1) {
-          store.dispatch({
+          dispatch({
             type: USER.UPDATE_AUTH_STATUS,
             value: 0,
           })

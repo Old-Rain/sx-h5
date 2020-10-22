@@ -3,7 +3,7 @@ import { ReducersMapObject } from 'redux'
 
 import userModule, { UserState } from './modules/user'
 
-interface Modules {
+export interface Modules {
   userModule: UserState
 }
 
