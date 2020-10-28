@@ -3,7 +3,7 @@ import { ReducersMapObject } from 'redux'
 
 import userModule, { UserState } from './modules/user'
 
-export interface Modules {
+export interface StoreModules {
   userModule: UserState
 }
 
@@ -12,7 +12,7 @@ export interface CommonAction {
   value?: any
 }
 
-const reducersMap: ReducersMapObject<Modules, CommonAction> = {
+const reducersMap: ReducersMapObject<StoreModules, CommonAction> = {
   userModule,
 }
 

@@ -14,7 +14,7 @@ import LoadFail from '@/components/LoadFail'
 import { Dispatch } from 'redux'
 import { useSelector, useDispatch, useStore, shallowEqual } from 'react-redux'
 import { appLogin } from '@/utils/appAuth'
-import { Modules, CommonAction } from '@/store/reducers'
+import { StoreModules, CommonAction } from '@/store/reducers'
 import { USER } from '@/store/modules/user/actionTypes'
 import { UserState } from '@/store/modules/user/index'
 
@@ -25,11 +25,11 @@ const withAuth = (
   pageName: string,
 ): FC<AuthProps> => {
   const Auth: FC<AuthProps> = (props: PropsWithChildren<AuthProps>) => {
-    const store = useStore<Modules>()
+    const store = useStore<StoreModules>()
 
     const dispatch = useDispatch<Dispatch<CommonAction>>()
 
-    const userState = useSelector<Modules, UserState>((state) => state.userModule, shallowEqual)
+    const userState = useSelector<StoreModules, UserState>((state) => state.userModule, shallowEqual)
 
     const authStatus = useMemo(() => userState.authStatus, [userState])
 
